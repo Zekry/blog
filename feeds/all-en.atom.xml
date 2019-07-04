@@ -1,5 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Blog</title><link href="https://zekry.github.io/blog/" rel="alternate"></link><link href="https://zekry.github.io/blog/feeds/all-en.atom.xml" rel="self"></link><id>https://zekry.github.io/blog/</id><updated>2019-06-13T11:20:00-04:00</updated><entry><title>Jupyter Blog Post!</title><link href="https://zekry.github.io/blog/blog-3.html" rel="alternate"></link><published>2019-06-13T11:20:00-04:00</published><updated>2019-06-13T11:20:00-04:00</updated><author><name>Zekry</name></author><id>tag:zekry.github.io,2019-06-13:/blog/blog-3.html</id><summary type="html">&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt ornare massa. Cursus vitae congue mauris rhoncus. Pulvinar neque laoreet suspendisse interdum. Eu nisl nunc mi ipsum faucibus vitae. Sapien faucibus et molestie …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt ornare massa. Cursus vitae congue mauris rhoncus. Pulvinar neque laoreet suspendisse interdum. Eu nisl nunc mi ipsum faucibus vitae. Sapien faucibus et molestie ac feugiat sed lectus vestibulum mattis. Nibh tortor id aliquet lectus proin nibh nisl. Sit amet venenatis urna cursus eget. Amet consectetur adipiscing elit duis. Quam pellentesque nec nam aliquam sem et tortor. Congue nisi vitae suscipit tellus.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="" src="images/dahab.jpg"&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</content><category term="python"></category></entry><entry><title>First Blog Post!</title><link href="https://zekry.github.io/blog/blog-1.html" rel="alternate"></link><published>2019-06-13T10:20:00-04:00</published><updated>2019-06-13T10:20:00-04:00</updated><author><name>Zekry</name></author><id>tag:zekry.github.io,2019-06-13:/blog/blog-1.html</id><summary type="html">&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt ornare massa. Cursus vitae congue mauris rhoncus. Pulvinar neque laoreet suspendisse interdum. Eu nisl nunc mi ipsum faucibus vitae. Sapien faucibus et molestie …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt ornare massa. Cursus vitae congue mauris rhoncus. Pulvinar neque laoreet suspendisse interdum. Eu nisl nunc mi ipsum faucibus vitae. Sapien faucibus et molestie ac feugiat sed lectus vestibulum mattis. Nibh tortor id aliquet lectus proin nibh nisl. Sit amet venenatis urna cursus eget. Amet consectetur adipiscing elit duis. Quam pellentesque nec nam aliquam sem et tortor. Congue nisi vitae suscipit tellus.&lt;/p&gt;</content><category term="python"></category></entry></feed>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Blog</title><link href="https://zekry.github.io/blog/" rel="alternate"></link><link href="https://zekry.github.io/blog/feeds/all-en.atom.xml" rel="self"></link><id>https://zekry.github.io/blog/</id><updated>2019-07-04T04:00:00-04:00</updated><entry><title>Train-test-split</title><link href="https://zekry.github.io/blog/blog-1.html" rel="alternate"></link><published>2019-07-04T04:00:00-04:00</published><updated>2019-07-04T04:00:00-04:00</updated><author><name>Zekry</name></author><id>tag:zekry.github.io,2019-07-04:/blog/blog-1.html</id><summary type="html">&lt;p&gt;&lt;img alt="" src="images/train_test meme.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;Train-test-split from scikit-learn provides an easy way to split your collected data into a training portion and a testing portion, which helps evaluate the chosen model before using it on new observations or to form predictions.  &lt;/p&gt;
+&lt;p&gt;First we will have to import it from sklearn.model_selection&lt;/p&gt;
+&lt;p&gt;from sklearn.model_selection import …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="" src="images/train_test meme.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;Train-test-split from scikit-learn provides an easy way to split your collected data into a training portion and a testing portion, which helps evaluate the chosen model before using it on new observations or to form predictions.  &lt;/p&gt;
+&lt;p&gt;First we will have to import it from sklearn.model_selection&lt;/p&gt;
+&lt;p&gt;from sklearn.model_selection import train_test_split&lt;/p&gt;
+&lt;p&gt;We will need to specify our target column in (y) and the feature-columns/predictors we decided to use in our model (x). For example if we are working on a model to predict house prices then our target (y) could be sale-price and features/predictors might include columns that contain number of rooms, area in sqft, overall condition of the house, etc.&lt;/p&gt;
+&lt;p&gt;Once the selection is done splitting the data is as easy as typing this line:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;  &lt;span class="n"&gt;X_train&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;X_test&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y_train&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y_test&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;train_test_split&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;There are a few optional parameters that can be included as well to improve outcome:&lt;/p&gt;
+&lt;p&gt;1- test_size :  float, int or None, optional (default=None)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;It can be set to a float between 0.0 and 1.0 to indicate a proportion of the dataset that is to be considered for test.&lt;/li&gt;
+&lt;li&gt;If set to an Int, that will be considered the number of samples to be included for testing.&lt;/li&gt;
+&lt;li&gt;If left empty, it will be set to default value (0.25) or a value to compliment train_size, if specified.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;2- train_size :  float, int, or None, (default=None)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;It can be set to a float between 0.0 and 1.0 to indicate a proportion of the dataset that is to be considered for train.&lt;/li&gt;
+&lt;li&gt;If set to an Int, that will be considered the number of samples to be included for training.&lt;/li&gt;
+&lt;li&gt;If left empty, it will automatically compliment test_size.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;3- random_state :  int, RandomState instance or None, optional (default=None)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;If set to an Int, it will be the seed used by the random generator.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If set to RandomState instance or None, it will be the random generator without a seed (if running multiple times, outcome will not be the same)
+4- shuffle : boolean, optional (default=True)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Whether or not to shuffle the data before splitting. If shuffle=False then stratify must be None.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;5- stratify : array-like or None (default=None)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;This will split your data based on the proportion of values in the provided to the parameter. For example, if the variable provided is a column that is a     binary categorical variable with values 0 and 1 and there are 40% of zeros and 60% of ones, stratify will make sure that your random split has 40% of 0's and 60% of 1's.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Further modifications applied to features or target columns should be applied to both train and test sets to avoid mismatch of datasets when fitting model or making predictions. For example, if a feature is dropped from the train set, it should also be dropped from the test set, or if using StandardScaler or LabelBinarizer, it has to be applied to the column in both sets.&lt;/p&gt;
+&lt;p&gt;Next would be to train and test the model of choice.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="images/train on test.jpg"&gt;&lt;/p&gt;</content><category term="python"></category><category term="scikit-learn"></category></entry></feed>

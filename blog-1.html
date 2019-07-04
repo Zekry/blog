@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <title>First Blog Post!</title>
+ <title>Train-test-split</title>
  <!-- Latest compiled and minified CSS -->
  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
  <div class="container">
@@ -12,9 +12,49 @@
  <div class="container">
 <div class="row">
  <div class="col-md-8">
-  <h3>First Blog Post!</h3>
-  <label>2019-06-13</label>
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt ornare massa. Cursus vitae congue mauris rhoncus. Pulvinar neque laoreet suspendisse interdum. Eu nisl nunc mi ipsum faucibus vitae. Sapien faucibus et molestie ac feugiat sed lectus vestibulum mattis. Nibh tortor id aliquet lectus proin nibh nisl. Sit amet venenatis urna cursus eget. Amet consectetur adipiscing elit duis. Quam pellentesque nec nam aliquam sem et tortor. Congue nisi vitae suscipit tellus.</p>
+  <h3>Train-test-split</h3>
+  <label>2019-07-04</label>
+  <p><img alt="" src="images/train_test meme.jpg"></p>
+<p>Train-test-split from scikit-learn provides an easy way to split your collected data into a training portion and a testing portion, which helps evaluate the chosen model before using it on new observations or to form predictions.  </p>
+<p>First we will have to import it from sklearn.model_selection</p>
+<p>from sklearn.model_selection import train_test_split</p>
+<p>We will need to specify our target column in (y) and the feature-columns/predictors we decided to use in our model (x). For example if we are working on a model to predict house prices then our target (y) could be sale-price and features/predictors might include columns that contain number of rooms, area in sqft, overall condition of the house, etc.</p>
+<p>Once the selection is done splitting the data is as easy as typing this line:</p>
+<div class="highlight"><pre><span></span>  <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+
+
+<p>There are a few optional parameters that can be included as well to improve outcome:</p>
+<p>1- test_size :  float, int or None, optional (default=None)</p>
+<ul>
+<li>It can be set to a float between 0.0 and 1.0 to indicate a proportion of the dataset that is to be considered for test.</li>
+<li>If set to an Int, that will be considered the number of samples to be included for testing.</li>
+<li>If left empty, it will be set to default value (0.25) or a value to compliment train_size, if specified.</li>
+</ul>
+<p>2- train_size :  float, int, or None, (default=None)</p>
+<ul>
+<li>It can be set to a float between 0.0 and 1.0 to indicate a proportion of the dataset that is to be considered for train.</li>
+<li>If set to an Int, that will be considered the number of samples to be included for training.</li>
+<li>If left empty, it will automatically compliment test_size.</li>
+</ul>
+<p>3- random_state :  int, RandomState instance or None, optional (default=None)</p>
+<ul>
+<li>If set to an Int, it will be the seed used by the random generator.</li>
+<li>
+<p>If set to RandomState instance or None, it will be the random generator without a seed (if running multiple times, outcome will not be the same)
+4- shuffle : boolean, optional (default=True)</p>
+</li>
+<li>
+<p>Whether or not to shuffle the data before splitting. If shuffle=False then stratify must be None.</p>
+</li>
+</ul>
+<p>5- stratify : array-like or None (default=None)</p>
+<ul>
+<li>This will split your data based on the proportion of values in the provided to the parameter. For example, if the variable provided is a column that is a     binary categorical variable with values 0 and 1 and there are 40% of zeros and 60% of ones, stratify will make sure that your random split has 40% of 0's and 60% of 1's.</li>
+</ul>
+<p>Further modifications applied to features or target columns should be applied to both train and test sets to avoid mismatch of datasets when fitting model or making predictions. For example, if a feature is dropped from the train set, it should also be dropped from the test set, or if using StandardScaler or LabelBinarizer, it has to be applied to the column in both sets.</p>
+<p>Next would be to train and test the model of choice.</p>
+<p><img alt="" src="images/train on test.jpg"></p>
  </div>
 </div>
  </div>
