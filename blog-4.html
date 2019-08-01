@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <title>Word2Vec Simple Implementation</title>
+ <!-- Latest compiled and minified CSS -->
+ <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+ <div class="container">
+  <h1><a href="https://zekry.github.io/blog">Blog</a></h1>
+ </div>
+</head>
+<body>
+ <div class="container">
+<div class="row">
+ <div class="col-md-8">
+  <h3>Word2Vec Simple Implementation</h3>
+  <label>2019-08-01</label>
+  <p>Word embeddings is the concept of representing every word used in a language by a set of real numbers (a vector). They are N-dimensional vectors that try to capture word-meaning and context in their values. A set of word vectors for a vocabulary should capture the meaning of the word, the relationship to other words, and the context of different words as they are used naturally.</p>
+<p>We will be training our own embeddings using Word2Vec. Word2Vec are two-layer neural networks that are trained to produce linguistic contexts of words in the form of numerical vectors. It takes input as a large corpus of text and assigns each unique word in the corpus a corresponding vector in the vector space it created, typically of several hundred dimensions. Word vectors are positioned in the vector space such that words that share common contexts in the corpus are located close to one another.</p>
+<p>NLTK provides some corpora that are ready to use for training the model. You can also get any text you like, in which case some cleaning and preprocessing will be required. Let's start...</p>
+<p>First we are going to download the corpus from nltk. The below command will prompt the downloader where we can select some or all of the data available.</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nltk</span>
+<span class="n">nltk</span><span class="o">.</span><span class="n">download</span> <span class="p">()</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">showing</span> <span class="n">info</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">raw</span><span class="p">.</span><span class="n">githubusercontent</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">nltk</span><span class="o">/</span><span class="n">nltk_data</span><span class="o">/</span><span class="n">gh</span><span class="o">-</span><span class="n">pages</span><span class="o">/</span><span class="k">index</span><span class="p">.</span><span class="n">xml</span>
+
+
+
+
+
+<span class="k">True</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">brown</span>
+<span class="kn">from</span> <span class="nn">gensim.models</span> <span class="kn">import</span> <span class="n">Word2Vec</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>We are going to use the brown corpus, so we just loaded that and imported our model. The last two lines are for ignoring annoying warnings. Now we will assign our data to a variable and take a quick look at it.</p>
+<div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">brown</span><span class="o">.</span><span class="n">sents</span><span class="p">()</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">data</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>[[<span class="s1">&#39;</span><span class="s">The</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">Fulton</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">County</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">Grand</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">Jury</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">said</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">Friday</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">an</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">investigation</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">of</span><span class="s1">&#39;</span>, <span class="s2">&quot;</span><span class="s">Atlanta&#39;s</span><span class="s2">&quot;</span>, <span class="s1">&#39;</span><span class="s">recent</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">primary</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">election</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">produced</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">``</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">no</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">evidence</span><span class="s1">&#39;</span>, <span class="s2">&quot;</span><span class="s">&#39;&#39;</span><span class="s2">&quot;</span>, <span class="s1">&#39;</span><span class="s">that</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">any</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">irregularities</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">took</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">place</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">.</span><span class="s1">&#39;</span>], [<span class="s1">&#39;</span><span class="s">The</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">jury</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">further</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">said</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">in</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">term-end</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">presentments</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">that</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">the</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">City</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">Executive</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">Committee</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">,</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">which</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">had</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">over-all</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">charge</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">of</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">the</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">election</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">,</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">``</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">deserves</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">the</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">praise</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">and</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">thanks</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">of</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">the</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">City</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">of</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">Atlanta</span><span class="s1">&#39;</span>, <span class="s2">&quot;</span><span class="s">&#39;&#39;</span><span class="s2">&quot;</span>, <span class="s1">&#39;</span><span class="s">for</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">the</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">manner</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">in</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">which</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">the</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">election</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">was</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">conducted</span><span class="s1">&#39;</span>, <span class="s1">&#39;</span><span class="s">.</span><span class="s1">&#39;</span>], ...]
+</pre></div>
+
+
+<p>Our data is a list of sentences were each sentnce is a list of words. So it is tokenized and ready to be processed by our model.</p>
+<p>It’s time to train our model. To do that we simply need to create a new Word2Vec instance. Word2Vec has a variety of parameters that can be optimized, here are some fundamental ones:</p>
+<p>• sentences — The iterable over the tokenised sentences we will train on (the Brown sentences).</p>
+<p>• size — Dimensionality of the word vectors.</p>
+<p>• window — Maximum distance between the current and predicted word within a sentence. For the window of size n the contexts are defined by capturing n words to the left of the target and n words to its right.</p>
+<p>• min_count — Ignores all words with total frequency lower than this.</p>
+<p>• negative — If &gt; 0, negative sampling will be used, the int for negative specifies how many “noise words” should be drawn (usually between 5-20). If set to 0, no negative sampling is used.</p>
+<p>• iter — How many epochs do we want to train for — how many times we want to pass through our training data.</p>
+<p>• workers — Determines how many worker threads will be used to train the model.</p>
+<div class="highlight"><pre><span></span><span class="n">w2v</span> <span class="o">=</span> <span class="n">Word2Vec</span><span class="p">(</span><span class="n">sentences</span> <span class="o">=</span> <span class="n">data</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span> <span class="n">window</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">min_count</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">negative</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="nb">iter</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">workers</span> <span class="o">=</span> <span class="mi">4</span><span class="p">)</span>
+</pre></div>
+
+
+<p>We can see below the length and some of the values for one of the trained word vectors.</p>
+<div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">w2v</span><span class="p">[</span><span class="s1">&#39;craft&#39;</span><span class="p">]))</span>
+<span class="n">w2v</span><span class="p">[</span><span class="s1">&#39;craft&#39;</span><span class="p">][:</span><span class="mi">6</span><span class="p">]</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="mi">300</span>
+
+
+
+
+
+<span class="nb">array</span><span class="p">([</span><span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">2270001</span> <span class="p">,</span>  <span class="mi">0</span><span class="p">.</span><span class="mi">12815301</span><span class="p">,</span> <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">04394055</span><span class="p">,</span> <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">07448043</span><span class="p">,</span> <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">04975335</span><span class="p">,</span>
+        <span class="mi">0</span><span class="p">.</span><span class="mi">17514104</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float32</span><span class="p">)</span>
+</pre></div>
+
+
+<p>We can now check word similarity in a couple different ways. For example get the most similar to a certain word:</p>
+<div class="highlight"><pre><span></span><span class="n">w2v</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="s1">&#39;mother&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="p">[(</span><span class="s1">&#39;father&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">9181399345397949</span><span class="p">),</span>
+ <span class="p">(</span><span class="s1">&#39;husband&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">8962709903717041</span><span class="p">),</span>
+ <span class="p">(</span><span class="s1">&#39;wife&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">8578481674194336</span><span class="p">),</span>
+ <span class="p">(</span><span class="s1">&#39;brother&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">8548943996429443</span><span class="p">),</span>
+ <span class="p">(</span><span class="s1">&#39;friend&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">8197029829025269</span><span class="p">),</span>
+ <span class="p">(</span><span class="s1">&#39;daughter&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">8035991787910461</span><span class="p">),</span>
+ <span class="p">(</span><span class="s1">&#39;son&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">7996119856834412</span><span class="p">),</span>
+ <span class="p">(</span><span class="s1">&#39;parents&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">7619069814682007</span><span class="p">),</span>
+ <span class="p">(</span><span class="s1">&#39;fellow&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">7598813772201538</span><span class="p">),</span>
+ <span class="p">(</span><span class="s1">&#39;sister&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">7593420743942261</span><span class="p">)]</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">w2v</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="s1">&#39;arm&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="p">[(</span><span class="s1">&#39;shoulders&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">8915469646453857</span><span class="p">),</span>
+ <span class="p">(</span><span class="s1">&#39;fingers&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">8854344487190247</span><span class="p">),</span>
+ <span class="p">(</span><span class="s1">&#39;knees&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">882630467414856</span><span class="p">),</span>
+ <span class="p">(</span><span class="s1">&#39;head&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">8768821358680725</span><span class="p">),</span>
+ <span class="p">(</span><span class="s1">&#39;mouth&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">8738419413566589</span><span class="p">),</span>
+ <span class="p">(</span><span class="s1">&#39;nose&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">8645551204681396</span><span class="p">),</span>
+ <span class="p">(</span><span class="s1">&#39;shoulder&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">8610392212867737</span><span class="p">),</span>
+ <span class="p">(</span><span class="s1">&#39;hat&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">853934645652771</span><span class="p">),</span>
+ <span class="p">(</span><span class="ss">&quot;father&#39;s&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">8474262952804565</span><span class="p">),</span>
+ <span class="p">(</span><span class="s1">&#39;lips&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">8473799228668213</span><span class="p">)]</span>
+</pre></div>
+
+
+<p>Or pick out the word that does't match in a group of words:</p>
+<div class="highlight"><pre><span></span><span class="n">w2v</span><span class="o">.</span><span class="n">doesnt_match</span><span class="p">(</span><span class="s1">&#39;breakfast cereal dinner lunch&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="s1">&#39;cereal&#39;</span>
+</pre></div>
+
+
+<p>We can also do it this way:</p>
+<div class="highlight"><pre><span></span><span class="n">w2v</span><span class="o">.</span><span class="n">doesnt_match</span><span class="p">([</span><span class="s1">&#39;lion&#39;</span><span class="p">,</span> <span class="s1">&#39;tiger&#39;</span><span class="p">,</span> <span class="s1">&#39;box&#39;</span><span class="p">])</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="s1">&#39;box&#39;</span>
+</pre></div>
+
+
+<p>Now our word embeddings and model are ready and can be further used for needed NLP tasks.</p>
+ </div>
+</div>
+ </div>
+</body>
+</html>
