@@ -1,22 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <title>Jupyter Blog Post!</title>
+ <title>Using APIs!</title>
  <!-- Latest compiled and minified CSS -->
  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
  <div class="container">
-  <h1><a href=".">Blog</a></h1>
+  <h1><a href="https://zekry.github.io/blog">Blog</a></h1>
  </div>
 </head>
 <body>
  <div class="container">
 <div class="row">
  <div class="col-md-8">
-  <h3>Jupyter Blog Post!</h3>
-  <label>2019-06-13</label>
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt ornare massa. Cursus vitae congue mauris rhoncus. Pulvinar neque laoreet suspendisse interdum. Eu nisl nunc mi ipsum faucibus vitae. Sapien faucibus et molestie ac feugiat sed lectus vestibulum mattis. Nibh tortor id aliquet lectus proin nibh nisl. Sit amet venenatis urna cursus eget. Amet consectetur adipiscing elit duis. Quam pellentesque nec nam aliquam sem et tortor. Congue nisi vitae suscipit tellus.</p>
-<p><img alt="" src="images/dahab.jpg"></p>
-<div class="highlight"><pre><span></span>
+  <h3>Using APIs!</h3>
+  <label>2019-08-01</label>
+  <p>Using APIs</p>
+<p><img alt="" src="images/api.jpeg"></p>
+<p>What is an API?
+API stands for Application Programming Interface.It is a set of programming code/URLs that enables data transmission between one software product and another. It also contains the terms of this data exchange. We are going to cover an example of using an API in python to get data and store it in a dataframe, as an example for collecting data for projects. APIs usually have a documentation page to explain how to interact with it.</p>
+<p>First, we are going to start with importing needed packages...</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">json</span>
+</pre></div>
+
+
+<p>JSON or JavaScript Object Notation is a minimal, readable format for structuring data. It is used primarily to transmit data between a server and web application. Most web APIs provide data in JSON for easy read.</p>
+<p>Now, We are going to use requests to query the API. We are going to use the OpenNotify API's ISS Pass endpoint that returns when the ISS will next pass over a given location on earth. But first will test it with a request for the current location of the ISS.</p>
+<div class="highlight"><pre><span></span><span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;http://api.open-notify.org/iss-now.json&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">200</span><span class="p">]</span><span class="o">&gt;</span>
+</pre></div>
+
+
+<p>Response 200 is a good sign, this means our request worked. Next we are going to add the paramters for Toronto to get when the ISS is going to pass over. We can do this by adding an optional keyword argument, params, to our request. In this case, there are two parameters we need to pass:</p>
+<p>lat — The latitude of the location we want.
+lon — The longitude of the location we want.</p>
+<p>We can do this by adding the query parameters to the url, like this:</p>
+<div class="highlight"><pre><span></span><span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;http://api.open-notify.org/iss-pass.json?lat=43.653225&amp;lon=79.383186&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">200</span><span class="p">]</span><span class="o">&gt;</span>
+</pre></div>
+
+
+<p>We can also make a dictionary with these parameters, and then pass them into the requests.get function.</p>
+<p>It’s almost always preferable to setup the parameters as a dictionary, because requests takes care of some things that come up, like properly formatting the query parameters.</p>
+<p>We are going to do that and store our response for later use.</p>
+<div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;lat&quot;</span><span class="p">:</span> <span class="mf">43.653225</span><span class="p">,</span> <span class="s2">&quot;lon&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">79.383186</span><span class="p">}</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s2">&quot;http://api.open-notify.org/iss-pass.json&quot;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">response</span><span class="o">.</span><span class="n">content</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">b</span><span class="s1">&#39;{\n  &quot;message&quot;: &quot;success&quot;, \n  &quot;request&quot;: {\n    &quot;altitude&quot;: 100, \n    &quot;datetime&quot;: 1564663440, \n    &quot;latitude&quot;: 43.653225, \n    &quot;longitude&quot;: -79.383186, \n    &quot;passes&quot;: 5\n  }, \n  &quot;response&quot;: [\n    {\n      &quot;duration&quot;: 506, \n      &quot;risetime&quot;: 1564685872\n    }, \n    {\n      &quot;duration&quot;: 651, \n      &quot;risetime&quot;: 1564691567\n    }, \n    {\n      &quot;duration&quot;: 627, \n      &quot;risetime&quot;: 1564697394\n    }, \n    {\n      &quot;duration&quot;: 607, \n      &quot;risetime&quot;: 1564703249\n    }, \n    {\n      &quot;duration&quot;: 642, \n      &quot;risetime&quot;: 1564709068\n    }\n  ]\n}\n&#39;</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">response</span><span class="o">.</span><span class="n">headers</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="err">{</span><span class="s1">&#39;Server&#39;</span><span class="p">:</span> <span class="s1">&#39;nginx/1.10.3&#39;</span><span class="p">,</span> <span class="s1">&#39;Date&#39;</span><span class="p">:</span> <span class="s1">&#39;Thu, 01 Aug 2019 13:30:47 GMT&#39;</span><span class="p">,</span> <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">,</span> <span class="s1">&#39;Content-Length&#39;</span><span class="p">:</span> <span class="s1">&#39;528&#39;</span><span class="p">,</span> <span class="s1">&#39;Connection&#39;</span><span class="p">:</span> <span class="s1">&#39;keep-alive&#39;</span><span class="p">,</span> <span class="s1">&#39;Via&#39;</span><span class="p">:</span> <span class="s1">&#39;1.1 vegur&#39;</span><span class="err">}</span>
+</pre></div>
+
+
+<p>As we can see the content is hard to read, this is where JSON helps. As we can see below the response is in a dictionary form with the full list of paramters and the data requested.</p>
+<div class="highlight"><pre><span></span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="err">{</span><span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="s1">&#39;success&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;request&#39;</span><span class="p">:</span> <span class="err">{</span><span class="s1">&#39;altitude&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+  <span class="s1">&#39;datetime&#39;</span><span class="p">:</span> <span class="mi">1564663440</span><span class="p">,</span>
+  <span class="s1">&#39;latitude&#39;</span><span class="p">:</span> <span class="mi">43</span><span class="p">.</span><span class="mi">653225</span><span class="p">,</span>
+  <span class="s1">&#39;longitude&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">79</span><span class="p">.</span><span class="mi">383186</span><span class="p">,</span>
+  <span class="s1">&#39;passes&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="err">}</span><span class="p">,</span>
+ <span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="p">[</span><span class="err">{</span><span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="mi">506</span><span class="p">,</span> <span class="s1">&#39;risetime&#39;</span><span class="p">:</span> <span class="mi">1564685872</span><span class="err">}</span><span class="p">,</span>
+  <span class="err">{</span><span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="mi">651</span><span class="p">,</span> <span class="s1">&#39;risetime&#39;</span><span class="p">:</span> <span class="mi">1564691567</span><span class="err">}</span><span class="p">,</span>
+  <span class="err">{</span><span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="mi">627</span><span class="p">,</span> <span class="s1">&#39;risetime&#39;</span><span class="p">:</span> <span class="mi">1564697394</span><span class="err">}</span><span class="p">,</span>
+  <span class="err">{</span><span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="mi">607</span><span class="p">,</span> <span class="s1">&#39;risetime&#39;</span><span class="p">:</span> <span class="mi">1564703249</span><span class="err">}</span><span class="p">,</span>
+  <span class="err">{</span><span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="mi">642</span><span class="p">,</span> <span class="s1">&#39;risetime&#39;</span><span class="p">:</span> <span class="mi">1564709068</span><span class="err">}</span><span class="p">]</span><span class="err">}</span>
+</pre></div>
+
+
+<p>Finally, we are going to take the part with the needed information and store it as a dataframe to a csv file.</p>
+<div class="highlight"><pre><span></span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;response&#39;</span><span class="p">]</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="p">[</span><span class="err">{</span><span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="mi">506</span><span class="p">,</span> <span class="s1">&#39;risetime&#39;</span><span class="p">:</span> <span class="mi">1564685872</span><span class="err">}</span><span class="p">,</span>
+ <span class="err">{</span><span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="mi">651</span><span class="p">,</span> <span class="s1">&#39;risetime&#39;</span><span class="p">:</span> <span class="mi">1564691567</span><span class="err">}</span><span class="p">,</span>
+ <span class="err">{</span><span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="mi">627</span><span class="p">,</span> <span class="s1">&#39;risetime&#39;</span><span class="p">:</span> <span class="mi">1564697394</span><span class="err">}</span><span class="p">,</span>
+ <span class="err">{</span><span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="mi">607</span><span class="p">,</span> <span class="s1">&#39;risetime&#39;</span><span class="p">:</span> <span class="mi">1564703249</span><span class="err">}</span><span class="p">,</span>
+ <span class="err">{</span><span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="mi">642</span><span class="p">,</span> <span class="s1">&#39;risetime&#39;</span><span class="p">:</span> <span class="mi">1564709068</span><span class="err">}</span><span class="p">]</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;response&#39;</span><span class="p">])</span>
+</pre></div>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>duration</th>
+      <th>risetime</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>506</td>
+      <td>1564685872</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>651</td>
+      <td>1564691567</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>627</td>
+      <td>1564697394</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>607</td>
+      <td>1564703249</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>642</td>
+      <td>1564709068</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="highlight"><pre><span></span><span class="n">upcoming</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;response&#39;</span><span class="p">])</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">upcoming</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;ISS.csv&#39;</span><span class="p">)</span>
 </pre></div>
  </div>
 </div>
